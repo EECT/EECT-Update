@@ -35,7 +35,18 @@ def home():
                 ask = input("是否下载更新？（y/n，默认n）：")
                 if ask == "y":
                     logger.info("准备下载更新")
+                    print("正在下载更新")
                     downloader.download_file(update_info[6], update_info[7], "./cache/download")
+                    ask = input("是否安装更新？（y/n，默认y）：")
+                    if ask == "y" or ask == "":
+                        logger.info("准备安装更新")
+                        print("正在安装更新")
+                        update.unzip_file("./cache/download/" + update_info[6], "./cache/download")
+                        print("安装完成")
+                    else:
+                        print("未安装更新")
+                        logger.info("未安装更新")
+                        main()
                     main()
                 else:
                     main()

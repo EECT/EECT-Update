@@ -5,6 +5,7 @@ from loguru import logger
 import traceback
 import zipfile
 import os
+import shutil
 
 
 # 获取更新配置

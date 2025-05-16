@@ -127,7 +127,7 @@ def get_download_progress():
 
 if __name__ == "__main__":
     # 示例：下载文件
-    file_name = "EECT_1.0.0.1.250509.1.-windows-x64.zip"
+    file_name = "EECT.zip"
     file_url = "https://github.com/EECT/EECT/releases/download/v1.0.0.1/EECT_1.0.0.1.250509.1.-windows-x64.zip"
     file_path = "./cache/download"
 
