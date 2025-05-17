@@ -57,7 +57,7 @@ jobs:
         script-name: main.py
         output-file: EECT-Update
         onefile: true
-        standalone: true
+        standalone: false
         include-data-dir: |
           config=config
         enable-plugins: tk-inter
