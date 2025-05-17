@@ -41,8 +41,8 @@ def home():
                     if ask == "y" or ask == "":
                         logger.info("准备安装更新")
                         print("正在安装更新")
-                        update.unzip_file("./cache/download/" + update_info[6], "./cache/download")
-                        print("安装完成")
+                        update.unzip_file("./cache/download/" + update_info[6], "./")
+                        print("安装完成，重新启动EECT即可升级至最新版本。")
                     else:
                         print("未安装更新")
                         logger.info("未安装更新")
