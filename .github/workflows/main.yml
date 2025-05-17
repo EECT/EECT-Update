@@ -56,10 +56,8 @@ jobs:
       with:
         script-name: main.py
         output-file: EECT-Update
-        --mode: onefile
         onefile: true
-        include-data-dir: |
-          config=config
+        standalone: true
         windows-console-mode: force
 
     - name: Zip the build artifact
