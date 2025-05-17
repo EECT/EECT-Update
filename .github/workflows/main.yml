@@ -45,7 +45,7 @@ jobs:
         script-name: main.py
         onefile: true
         standalone: true
-        output-dir: dist
+        output-dir: dist\EECT-Update.exe
         disable-console: false
 
     - name: Upload build artifact
