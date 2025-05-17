@@ -56,7 +56,7 @@ jobs:
       with:
         script-name: main.py
         output-file: EECT-Update
-        mode: onefile
+        --mode: onefile
         onefile: true
         include-data-dir: |
           config=config
