@@ -66,7 +66,7 @@ jobs:
     - name: Zip the build artifact
       run: |
         dir '.\build\main.dist\*'
-        Compress-Archive -Path '.\build\main.dist\*' -DestinationPath 'EECT-Update.zip' -Force
+        Compress-Archive -Path '.\build\main.dist\*' -DestinationPath 'EECT-Update_build.zip' -Force
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
