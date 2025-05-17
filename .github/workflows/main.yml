@@ -23,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.11'
 
     - name: Cache Python dependencies
       uses: actions/cache@v4
@@ -56,12 +56,11 @@ jobs:
       with:
         script-name: main.py
         output-file: EECT-Update
+        mode: onefile
         onefile: true
-        standalone: false
         include-data-dir: |
           config=config
-        enable-plugins: tk-inter
-        windows-console-mode: attach
+        windows-console-mode: force
 
     - name: Zip the build artifact
       run: |
