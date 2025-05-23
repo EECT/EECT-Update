@@ -1,11 +1,10 @@
-import requests
+import os
 import tomllib
-from packaging import version
-from loguru import logger
 import traceback
 import zipfile
-import os
-import shutil
+import requests
+from loguru import logger
+from packaging import version
 
 
 # 获取更新配置
@@ -15,7 +14,9 @@ def get_update_config():
     with open('./config/update_config.toml', 'rb') as f:
         update_config = tomllib.load(f)
         url = update_config['url']
-    return url
+        beta_url = update_config['beta_url']
+        update_channel = update_config['update_channel']
+    return url, beta_url, update_channel
 
 
 # 检查更新
@@ -23,37 +24,74 @@ def check_update():
     logger.info("调用函数 check_update")
     # 检查是否有更新
     logger.info("开始检查更新")
-    url = get_update_config()
-    response = requests.get(url, verify=False)  # verify=False用于忽略SSL证书验证
-    try:
-        logger.info("解析数据")
-        data = response.text
-        logger.info(f"获得的原始数据：\n{data}")
-        data = tomllib.loads(data)
+    # 从指定更新通道检查更新
+    if get_update_config()[2] == "0":
+        logger.info("使用正式版更新通道")
+        url = get_update_config()[0]    # 获取最新正式版
+        response = requests.get(url, verify=False)  # verify=False用于忽略SSL证书验证
+        try:
+            logger.info("解析数据")
+            data = response.text
+            logger.info(f"获得的原始数据：\n{data}")
+            data = tomllib.loads(data)
 
-        new_version = data['version']
-        version_code = data['version_code']
-        date = data['date']
-        changelog = data['changelog']
-        importance = data['importance']
-        zip_name = data['file_name']
-        url = data['download_url']
-        return new_version, version_code, date, changelog, importance, zip_name, url
-    except Exception:
-        logger.error(f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
-        print(f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
-        logger.info("使用本地数据")
-        with open('./config/update.toml', 'rb') as f:
-            update_data = tomllib.load(f)
-            new_version = update_data['version']
-            version_code = update_data['version_code']
-            date = update_data['date']
-            changelog = update_data['changelog']
-            importance = update_data['importance']
-            zip_name = update_data['file_name']
-            url = update_data['download_url']
+            new_version = data['version']
+            version_code = data['version_code']
+            date = data['date']
+            changelog = data['changelog']
+            importance = data['importance']
+            zip_name = data['file_name']
+            url = data['download_url']
             return new_version, version_code, date, changelog, importance, zip_name, url
+        except Exception:
+            logger.error(f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
+            print(f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
+            logger.info("使用本地数据")
+            with open('./config/update.toml', 'rb') as f:
+                update_data = tomllib.load(f)
+                new_version = update_data['version']
+                version_code = update_data['version_code']
+                date = update_data['date']
+                changelog = update_data['changelog']
+                importance = update_data['importance']
+                zip_name = update_data['file_name']
+                url = update_data['download_url']
+                return new_version, version_code, date, changelog, importance, zip_name, url
 
+    else:
+        logger.info("使用Beta版更新通道")
+        url = get_update_config()[1]    # 获取最新Beta
+        response = requests.get(url, verify=False)  # verify=False用于忽略SSL证书验证
+        try:
+            logger.info("解析数据")
+            data = response.text
+            logger.info(f"获得的原始数据：\n{data}")
+            data = tomllib.loads(data)
+
+            new_version = data['version']
+            version_code = data['version_code']
+            date = data['date']
+            changelog = data['changelog']
+            importance = data['importance']
+            zip_name = data['file_name']
+            url = data['download_url']
+            return new_version, version_code, date, changelog, importance, zip_name, url
+        except Exception:
+            logger.error(
+                f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
+            print(
+                f"解析数据时出错。HTTP状态码：{response.status_code}\n\n堆栈信息：\n{traceback.format_exc()}\n\n获得的原始数据：\n{response.text}")
+            logger.info("使用本地数据")
+            with open('./config/update.toml', 'rb') as f:
+                update_data = tomllib.load(f)
+                new_version = update_data['version']
+                version_code = update_data['version_code']
+                date = update_data['date']
+                changelog = update_data['changelog']
+                importance = update_data['importance']
+                zip_name = update_data['file_name']
+                url = update_data['download_url']
+                return new_version, version_code, date, changelog, importance, zip_name, url
 
 
 def check_version(value):   # 检查当前程序版本
